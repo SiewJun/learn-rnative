@@ -1,14 +1,31 @@
-import { NativeTabs, Icon, Label } from 'expo-router/unstable-native-tabs';
+import {
+  NativeTabs,
+  Icon,
+  Label,
+  VectorIcon,
+} from "expo-router/unstable-native-tabs";
+import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
+import "../global.css";
 
 export default function TabLayout() {
   return (
     <NativeTabs>
       <NativeTabs.Trigger name="index">
         <Label>Home</Label>
-        <Icon sf="house.fill" drawable="custom_android_drawable" />
+        <Icon
+          sf={{ default: "house", selected: "house.fill" }}
+          androidSrc={
+            <VectorIcon family={MaterialCommunityIcons} name="home-outline" />
+          }
+        />
       </NativeTabs.Trigger>
       <NativeTabs.Trigger name="settings">
-        <Icon sf="gear" drawable="custom_settings_drawable" />
+        <Icon
+          sf={{ default: "gearshape", selected: "gearshape.fill" }}
+          androidSrc={
+            <VectorIcon family={MaterialCommunityIcons} name="cog-outline" />
+          }
+        />
         <Label>Settings</Label>
       </NativeTabs.Trigger>
     </NativeTabs>
