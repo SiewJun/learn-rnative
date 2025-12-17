@@ -4,6 +4,7 @@ import { useRouter } from "expo-router";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { ThemeScheme } from "../../types/theme";
 import { THEME_OPTIONS } from "../../constants/theme-options";
+import { ScreenContainer } from "../../components/ScreenContainer";
 
 export default function ThemeSelection() {
   const { scheme, setScheme, theme } = useTheme();
@@ -14,7 +15,7 @@ export default function ThemeSelection() {
   };
 
   return (
-    <View className="flex-1 bg-background">
+    <ScreenContainer>
         <View className="flex-row items-center px-4 pb-4">
           <TouchableOpacity
             onPress={() => router.back()}
@@ -85,7 +86,7 @@ export default function ThemeSelection() {
         </View>
         </View>
       </ScrollView>
-    </View>
+    </ScreenContainer>
   );
 }
 

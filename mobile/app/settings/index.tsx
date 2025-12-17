@@ -3,13 +3,14 @@ import { useTheme } from "../../providers/ThemeProvider";
 import { useRouter } from "expo-router";
 import MaterialCommunityIcons from "@expo/vector-icons/MaterialCommunityIcons";
 import { getThemeLabel } from "../../utils/theme";
+import { ScreenContainer } from "../../components/ScreenContainer";
 
 export default function SettingsTab() {
   const { scheme, theme } = useTheme();
   const router = useRouter();
 
   return (
-    <View className="flex-1 bg-background">
+    <ScreenContainer>
       <View className="px-4 pb-4">
         <Text className="text-2xl font-bold text-onBackground">
           Settings
@@ -51,7 +52,7 @@ export default function SettingsTab() {
           </View>
         </View>
       </ScrollView>
-    </View>
+    </ScreenContainer>
   );
 }
 

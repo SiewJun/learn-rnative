@@ -1,11 +1,12 @@
-import { View, Text } from "react-native";
+import { Text } from "react-native";
+import { ScreenContainer } from "../components/ScreenContainer";
 
 export default function HomeTab() {
   return (
-    <View className="flex-1 items-center justify-center bg-background">
+    <ScreenContainer className="items-center justify-center">
       <Text className="text-xl font-bold text-success">
         Welcome to Nativewind!
       </Text>
-    </View>
+    </ScreenContainer>
   );
 }
