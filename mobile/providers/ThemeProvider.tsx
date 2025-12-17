@@ -1,20 +1,52 @@
-import { createContext, useContext, useMemo, useState } from "react";
+import { createContext, useContext, useMemo, useState, useEffect } from "react";
 import { useColorScheme } from "react-native";
+import AsyncStorage from "@react-native-async-storage/async-storage";
 import { lightTheme, darkTheme, themes } from "../constants/theme";
+import { ThemeContextValue, ThemeScheme } from "../types/theme";
+import { STORAGE_KEYS } from "../constants/storage";
+import { isValidThemeScheme } from "../utils/theme";
 
-type Scheme = "light" | "dark" | "system";
-type Ctx = {
-  scheme: Scheme;
-  setScheme: (s: Scheme) => void;
-  theme: typeof lightTheme;
-  vars: any;
-};
-
-const ThemeContext = createContext<Ctx | null>(null);
+const ThemeContext = createContext<ThemeContextValue | null>(null);
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const system = useColorScheme() === "dark" ? "dark" : "light";
-  const [scheme, setScheme] = useState<Scheme>("system");
+  const systemColorScheme = useColorScheme();
+  const system = systemColorScheme === "dark" ? "dark" : "light";
+  const [scheme, setScheme] = useState<ThemeScheme>("system");
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const loadTheme = async () => {
+      try {
+        const savedScheme = await AsyncStorage.getItem(STORAGE_KEYS.THEME_SCHEME);
+        if (savedScheme && isValidThemeScheme(savedScheme)) {
+          setScheme(savedScheme);
+        }
+      } catch (error) {
+        if (__DEV__) {
+          console.error("Failed to load theme preference:", error);
+        }
+      } finally {
+        setIsLoading(false);
+      }
+    };
+    loadTheme();
+  }, []);
+
+  useEffect(() => {
+    if (!isLoading) {
+      const saveTheme = async () => {
+        try {
+          await AsyncStorage.setItem(STORAGE_KEYS.THEME_SCHEME, scheme);
+        } catch (error) {
+          if (__DEV__) {
+            console.error("Failed to save theme preference:", error);
+          }
+        }
+      };
+      saveTheme();
+    }
+  }, [scheme, isLoading]);
+
   const resolved = scheme === "system" ? system : scheme;
   const value = useMemo(
     () => ({
@@ -22,9 +54,11 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       setScheme,
       theme: resolved === "dark" ? darkTheme : lightTheme,
       vars: themes[resolved],
+      isLoading,
     }),
-    [scheme, resolved]
+    [scheme, resolved, isLoading]
   );
+  
   return (
     <ThemeContext.Provider value={value}>{children}</ThemeContext.Provider>
   );
