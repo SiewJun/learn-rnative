@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo, useState, useEffect } from "react";
-import { useColorScheme } from "react-native";
+import { useColorScheme, Appearance } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { lightTheme, darkTheme, themes } from "../constants/theme";
 import { ThemeContextValue, ThemeScheme } from "../types/theme";
@@ -46,6 +46,18 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
       saveTheme();
     }
   }, [scheme, isLoading]);
+
+  // Override the native appearance for all native components (including NativeTabs)
+  // This ensures the native tab bar theme matches the user's selected theme
+  useEffect(() => {
+    if (scheme === "system") {
+      // Reset to follow system theme
+      Appearance.setColorScheme(null);
+    } else {
+      // Force the native appearance to match user's selection
+      Appearance.setColorScheme(scheme);
+    }
+  }, [scheme]);
 
   const resolved = scheme === "system" ? system : scheme;
   const value = useMemo(
