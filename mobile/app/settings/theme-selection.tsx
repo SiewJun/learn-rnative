@@ -16,7 +16,7 @@ export default function ThemeSelection() {
 
   return (
     <ScreenContainer>
-        <View className="flex-row items-center px-4 pb-4">
+        <View className="flex-row items-center px-4">
           <TouchableOpacity
             onPress={() => router.back()}
             className="mr-4"

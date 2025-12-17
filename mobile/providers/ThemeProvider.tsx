@@ -1,5 +1,5 @@
 import { createContext, useContext, useMemo, useState, useEffect } from "react";
-import { useColorScheme, Appearance } from "react-native";
+import { useColorScheme, Appearance, Platform } from "react-native";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { lightTheme, darkTheme, themes } from "../constants/theme";
 import { ThemeContextValue, ThemeScheme } from "../types/theme";
@@ -49,7 +49,10 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 
   // Override the native appearance for all native components (including NativeTabs)
   // This ensures the native tab bar theme matches the user's selected theme
+  // Note: Appearance.setColorScheme is only available on native platforms
   useEffect(() => {
+    if (Platform.OS === "web") return;
+    
     if (scheme === "system") {
       // Reset to follow system theme
       Appearance.setColorScheme(null);
